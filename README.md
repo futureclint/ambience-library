@@ -44,3 +44,11 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Approach
+ - categories nav expands/collapses on click
+ - filter by tags
+ - number of videos meeting category
+ - get title from yt api for separate title
+ - tags hidden on load, display tool tip on hover
+ - tags filtering have different highlight in tag tool tip
