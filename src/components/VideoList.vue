@@ -1,6 +1,12 @@
 <template>
   <div class="videos-list">
     <h1>Ambience Library</h1>
+    <nav>
+      <label for="tag" v-for="tag in tags" :key="tag">
+        <input type="checkbox" :name="tag" :id="tag">
+        <span>{{tag}}</span>
+      </label>
+    </nav>
     <div class="list-wrap">
       <div v-for="video in videos" :key="video.id" :id="video.id" class="video">
         <h3>{{ video.title }}</h3>
@@ -20,6 +26,11 @@
     display: flex;
     flex-direction: column;
   }
+
+  nav {
+    display: flex;
+  }
+
   .videos-list .list-wrap {
     display: flex;
     flex-wrap: wrap;
@@ -75,47 +86,47 @@ JSON.stringify(myData)
   "id": "nd5cpmQiP-4",
   "href": "https://www.youtube.com/embed/nd5cpmQiP-4?modestbranding=1&color=white&iv_load_policy=3",
   "title": "Cozy Hobbit Coffee Shop 🍀 Rainy Day at Dreamy Forest with Fireplace For Relax, Study and Sleep",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["bar"]
 }, {
   "id": "fV1kXBfMl6k",
   "href": "https://www.youtube.com/embed/fV1kXBfMl6k?modestbranding=1&color=white&iv_load_policy=3",
   "title": "Ocean - Underwater Ambient Journey - Mysterious Ambient Music For Focus And Concentration",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["tag"]
 }, {
   "id": "l2mW0DxCBY4",
   "href": "https://www.youtube.com/embed/l2mW0DxCBY4",
   "title": "Cozy Coffee Shop Ambience with Relaxing Jazz Music, Rain Sounds and Crackling Fireplace - 8 Hours",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["foo"]
 }, {
   "id": "1R41JB3hbIc",
   "href": "https://www.youtube.com/embed/1R41JB3hbIc",
   "title": "Cozy Winter Ambience with a Soothing Fireplace and the Sound of Gentle Rain",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["foo", "bar"]
 }, {
   "id": "vtPpfC1jkiQ",
   "href": "https://www.youtube.com/embed/vtPpfC1jkiQ",
   "title": "Ethereal Horizon: Soothing Sci-Fi Music for a Tranquil Escape",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["foo", "bar"]
 }, {
   "id": "SnUBb-FAlCY",
   "href": "https://www.youtube.com/embed/SnUBb-FAlCY",
   "title": "Listen to the rain on the forest path, relax, reduce anxiety, and sleep deeply",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["tag", "bar"]
 }, {
   "id": "KIhGy-587Lk",
   "href": "https://www.youtube.com/embed/KIhGy-587Lk",
   "title": "Medieval Fantasy Music - Fantasy Music and Ambience",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["tag", "bar"]
 }, {
   "id": "fNnLSCZPXMk",
   "href": "https://www.youtube.com/embed/fNnLSCZPXMk",
   "title": "Peaceful Instrumental Christmas Music - Relaxing Christmas music 'Snowy Christmas Night'",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["tag", "foo"]
 }, {
   "id": "kkNr8c24Xbo",
   "href": "https://www.youtube.com/embed/kkNr8c24Xbo",
   "title": "Staying at the Good Witch's Cabin in the Autumn Forest | ASMR Ambience (musicless) Cats & Herbs",
-  "tags": ["tag", "foo", "bar"]
+  "tags": ["tag", "foo"]
 }, 
 // {
 //   "id": "Nd0beTmpfVA",
@@ -839,4 +850,14 @@ JSON.stringify(myData)
 //   "tags": ["tag", "foo", "bar"]
 // }
 ]
+
+  const tags = ['all', 'tag', 'foo', 'bar'];
+  let filter = 'all';
+
+function filterVideos(videoTag: string) {
+  if (!!videoTag)
+  return videos.filter((video) => video.tags.includes(videoTag))
+  else 
+  return videos
+}
 </script>
