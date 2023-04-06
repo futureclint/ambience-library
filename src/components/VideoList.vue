@@ -2,13 +2,14 @@
   <div class="videos-list">
     <h1>Ambience Library</h1>
     <nav>
+      <h1>Items by tag: {{ $route.params.tag }}</h1>
+      <!-- // if no tag, show all -->
       <label for="tag" v-for="tag in tags" :key="tag">
-        <input type="checkbox" :name="tag" :id="tag">
-        <span>{{tag}}</span>
+        <router-link :to="{ name: 'itemsByTag', params: {tag: tag}}">{{tag}}</router-link>
       </label>
     </nav>
     <div class="list-wrap">
-      <div v-for="video in videos" :key="video.id" :id="video.id" class="video">
+      <div v-for="video in filteredItems" :key="video.id" :id="video.id" class="video">
         <h3>{{ video.title }}</h3>
         <div class="video-wrap">
             <iframe width="480" height="270" :src="video.href" :title="video.title" frameborder="0" allowfullscreen></iframe>
@@ -68,14 +69,86 @@
     } */
   }
 </style>
-<script setup lang="ts">
+<script lang="ts">
+  export default {
+    data() {
+      return {
+        tags: ['tag', 'foo', 'bar'],
+        items: [
+        {
+  "id": "pjeaX4Z2N6Q",
+  "href": "https://www.youtube.com/embed/pjeaX4Z2N6Q?modestbranding=1&color=white&iv_load_policy=3",
+  "title": "[ 𝐖𝐎𝐑𝐊 & 𝐉𝐀𝐙𝐙 ] 作業中に集中力を高めるジャズピアノを演奏💖 Relaxing Jazz Piano Background Music",
+  "tags": ["tag", "foo", "bar"]
+}, {
+  "id": "nd5cpmQiP-4",
+  "href": "https://www.youtube.com/embed/nd5cpmQiP-4?modestbranding=1&color=white&iv_load_policy=3",
+  "title": "Cozy Hobbit Coffee Shop 🍀 Rainy Day at Dreamy Forest with Fireplace For Relax, Study and Sleep",
+  "tags": ["bar"]
+}, {
+  "id": "fV1kXBfMl6k",
+  "href": "https://www.youtube.com/embed/fV1kXBfMl6k?modestbranding=1&color=white&iv_load_policy=3",
+  "title": "Ocean - Underwater Ambient Journey - Mysterious Ambient Music For Focus And Concentration",
+  "tags": ["tag"]
+}, {
+  "id": "l2mW0DxCBY4",
+  "href": "https://www.youtube.com/embed/l2mW0DxCBY4",
+  "title": "Cozy Coffee Shop Ambience with Relaxing Jazz Music, Rain Sounds and Crackling Fireplace - 8 Hours",
+  "tags": ["foo"]
+}, {
+  "id": "1R41JB3hbIc",
+  "href": "https://www.youtube.com/embed/1R41JB3hbIc",
+  "title": "Cozy Winter Ambience with a Soothing Fireplace and the Sound of Gentle Rain",
+  "tags": ["foo", "bar"]
+}, {
+  "id": "vtPpfC1jkiQ",
+  "href": "https://www.youtube.com/embed/vtPpfC1jkiQ",
+  "title": "Ethereal Horizon: Soothing Sci-Fi Music for a Tranquil Escape",
+  "tags": ["foo", "bar"]
+}, {
+  "id": "SnUBb-FAlCY",
+  "href": "https://www.youtube.com/embed/SnUBb-FAlCY",
+  "title": "Listen to the rain on the forest path, relax, reduce anxiety, and sleep deeply",
+  "tags": ["tag", "bar"]
+}, {
+  "id": "KIhGy-587Lk",
+  "href": "https://www.youtube.com/embed/KIhGy-587Lk",
+  "title": "Medieval Fantasy Music - Fantasy Music and Ambience",
+  "tags": ["tag", "bar"]
+}, {
+  "id": "fNnLSCZPXMk",
+  "href": "https://www.youtube.com/embed/fNnLSCZPXMk",
+  "title": "Peaceful Instrumental Christmas Music - Relaxing Christmas music 'Snowy Christmas Night'",
+  "tags": ["tag", "foo"]
+}, {
+  "id": "kkNr8c24Xbo",
+  "href": "https://www.youtube.com/embed/kkNr8c24Xbo",
+  "title": "Staying at the Good Witch's Cabin in the Autumn Forest | ASMR Ambience (musicless) Cats & Herbs",
+  "tags": ["tag", "foo"]
+}
+        ]
+      }
+    },
+    computed: {
+      filteredItems() {
+        const tag = this.$route.params.tag
+        if (typeof tag === 'string') {
+          return this.items.filter(item => item.tags.includes(tag))
+        } else if (Array.isArray(tag)) {
+          return this.items.filter(item => item.tags.includes(tag[0]))
+        } else {
+          console.log("Nope.")
+        }
+      }
+    }
+  }
 /**
  * var myData = [];
-document.querySelectorAll('#meta #video-title').forEach(video => {
-    var id = /v=(.*?)\&list/g.exec(video.getAttribute('href'));
-    if (Array.isArray(id)) myData.push({"id": id[1], "href": "https://www.youtube.com/embed/" + id[1], "title":video.innerText, "tags": ["tag", "foo", "bar"]})
-})
-JSON.stringify(myData)
+    document.querySelectorAll('#meta #video-title').forEach(video => {
+        var id = /v=(.*?)\&list/g.exec(video.getAttribute('href'));
+        if (Array.isArray(id)) myData.push({"id": id[1], "href": "https://www.youtube.com/embed/" + id[1], "title":video.innerText, "tags": ["tag", "foo", "bar"]})
+    })
+    JSON.stringify(myData)
  */
   const videos = [{
   "id": "pjeaX4Z2N6Q",
