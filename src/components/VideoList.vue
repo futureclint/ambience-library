@@ -3,16 +3,18 @@
     <h1>Ambience Library</h1>
     <nav>
       <h1>Items by tag: {{ $route.params.tag }}</h1>
-      <!-- // if no tag, show all -->
+      <!-- all -->
       <label for="tag" v-for="tag in tags" :key="tag">
         <router-link :to="{ name: 'itemsByTag', params: {tag: tag}}">{{tag}}</router-link>
       </label>
     </nav>
     <div class="list-wrap">
       <div v-for="video in filteredItems" :key="video.id" :id="video.id" class="video">
-        <h3>{{ video.title }}</h3>
+        <!-- <h3>{{ video.title }}</h3> -->
         <div class="video-wrap">
-            <iframe width="480" height="270" :src="video.href" :title="video.title" frameborder="0" allowfullscreen></iframe>
+          <div v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" class="play-button">⏵</div>
+          <img v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" :src="thumbnailUrl(video.id)" alt="" srcset="">
+          <iframe v-else width="480" height="270" :src="video.href" :title="video.title" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="tag-wrap">
           <div>Tags</div>
@@ -68,6 +70,28 @@
       height: auto;
     } */
   }
+
+  .video-wrap {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .play-button {
+    position: absolute;
+    z-index: 1;
+    background: #313131e3;
+    border-radius: 50px;
+    padding: 15px 15px 15px 20px;
+    height: 75px;
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4rem;
+    color: white;
+  }
 </style>
 <script lang="ts">
   export default {
@@ -77,17 +101,17 @@
         items: [
         {
   "id": "pjeaX4Z2N6Q",
-  "href": "https://www.youtube.com/embed/pjeaX4Z2N6Q?modestbranding=1&color=white&iv_load_policy=3",
+  "href": "https://www.youtube.com/embed/pjeaX4Z2N6Q?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "[ 𝐖𝐎𝐑𝐊 & 𝐉𝐀𝐙𝐙 ] 作業中に集中力を高めるジャズピアノを演奏💖 Relaxing Jazz Piano Background Music",
   "tags": ["tag", "foo", "bar"]
 }, {
   "id": "nd5cpmQiP-4",
-  "href": "https://www.youtube.com/embed/nd5cpmQiP-4?modestbranding=1&color=white&iv_load_policy=3",
+  "href": "https://www.youtube.com/embed/nd5cpmQiP-4?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "Cozy Hobbit Coffee Shop 🍀 Rainy Day at Dreamy Forest with Fireplace For Relax, Study and Sleep",
   "tags": ["bar"]
 }, {
   "id": "fV1kXBfMl6k",
-  "href": "https://www.youtube.com/embed/fV1kXBfMl6k?modestbranding=1&color=white&iv_load_policy=3",
+  "href": "https://www.youtube.com/embed/fV1kXBfMl6k?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "Ocean - Underwater Ambient Journey - Mysterious Ambient Music For Focus And Concentration",
   "tags": ["tag"]
 }, {
@@ -126,7 +150,8 @@
   "title": "Staying at the Good Witch's Cabin in the Autumn Forest | ASMR Ambience (musicless) Cats & Herbs",
   "tags": ["tag", "foo"]
 }
-        ]
+        ],
+        videoPlayed: 'null'
       }
     },
     computed: {
@@ -137,8 +162,17 @@
         } else if (Array.isArray(tag)) {
           return this.items.filter(item => item.tags.includes(tag[0]))
         } else {
-          console.log("Nope.")
+          return this.items
         }
+      }
+    },
+    methods: {
+      thumbnailUrl(id: string) {
+        const baseUrl = 'https://img.youtube.com/vi'
+        return `${baseUrl}/${id}/mqdefault.jpg`
+      },
+      onVideoPlay(id: string) {
+        this.videoPlayed = id;
       }
     }
   }
@@ -926,11 +960,4 @@
 
   const tags = ['all', 'tag', 'foo', 'bar'];
   let filter = 'all';
-
-function filterVideos(videoTag: string) {
-  if (!!videoTag)
-  return videos.filter((video) => video.tags.includes(videoTag))
-  else 
-  return videos
-}
 </script>
