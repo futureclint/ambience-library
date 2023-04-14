@@ -13,7 +13,7 @@
         <!-- <h3>{{ video.title }}</h3> -->
         <div class="video-wrap">
           <div v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" class="play-button">⏵</div>
-          <img v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" :src="thumbnailUrl(video.id)" alt="" srcset="">
+          <img v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" :src="thumbnailUrl(video.id)" alt="" :srcset="ssThumbnailUrl(video.id)">
           <iframe v-else width="480" height="270" :src="video.href" :title="video.title" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="tag-wrap">
@@ -97,7 +97,7 @@
   export default {
     data() {
       return {
-        tags: ['tag', 'foo', 'bar'],
+        tags: ['tag', 'foo', 'bar', 'all'],
         items: [
         {
   "id": "pjeaX4Z2N6Q",
@@ -157,7 +157,7 @@
     computed: {
       filteredItems() {
         const tag = this.$route.params.tag
-        if (typeof tag === 'string') {
+        if (typeof tag === 'string' && tag !== 'all') {
           return this.items.filter(item => item.tags.includes(tag))
         } else if (Array.isArray(tag)) {
           return this.items.filter(item => item.tags.includes(tag[0]))
@@ -169,7 +169,12 @@
     methods: {
       thumbnailUrl(id: string) {
         const baseUrl = 'https://img.youtube.com/vi'
-        return `${baseUrl}/${id}/mqdefault.jpg`
+        return `${baseUrl}/${id}/default.jpg`
+      },
+      ssThumbnailUrl(id: string) {
+        const baseUrl = 'https://img.youtube.com/vi'
+        return `${baseUrl}/${id}/mqdefault.jpg 320w, ${baseUrl}/${id}/hqdefault.jpg 480w,
+        ${baseUrl}/${id}/sddefault.jpg 640w, ${baseUrl}/${id}/maxresdefault.jpg 1280w`
       },
       onVideoPlay(id: string) {
         this.videoPlayed = id;
