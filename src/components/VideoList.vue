@@ -3,7 +3,6 @@
     <h1>Ambience Library</h1>
     <nav>
       <h1>Items by tag: {{ $route.params.tag }}</h1>
-      <!-- all -->
       <label for="tag" v-for="tag in tags" :key="tag">
         <router-link :to="{ name: 'itemsByTag', params: {tag: tag}}">{{tag}}</router-link>
       </label>
@@ -13,8 +12,8 @@
         <!-- <h3>{{ video.title }}</h3> -->
         <div class="video-wrap">
           <div v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" class="play-button">⏵</div>
-          <img v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" :src="thumbnailUrl(video.id)" alt="" :srcset="ssThumbnailUrl(video.id)">
-          <iframe v-else width="480" height="270" :src="video.href" :title="video.title" frameborder="0" allowfullscreen></iframe>
+          <img v-if="videoPlayed !== video.id" @click.prevent="onVideoPlay(video.id)" :src="fbThumbnailUrl(video.id)" alt="" :srcset="ssThumbnailUrl(video.id)" sizes="(max-width: 600px) 320px, 480px" ref="image">
+          <iframe v-else width="480" height="270" :data-fbSrc="video.id" :src="videoHref(video.id)" :title="video.title" frameborder="0" allowfullscreen></iframe>
         </div>
         <div class="tag-wrap">
           <div>Tags</div>
@@ -55,6 +54,10 @@
       flex-basis: 45%;
       margin: 2vw;
     }
+  }
+
+  div.video-wrap {
+    cursor: pointer;
   }
 
   .videos-list .list-wrap .video-wrap iframe {
@@ -101,52 +104,42 @@
         items: [
         {
   "id": "pjeaX4Z2N6Q",
-  "href": "https://www.youtube.com/embed/pjeaX4Z2N6Q?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "[ 𝐖𝐎𝐑𝐊 & 𝐉𝐀𝐙𝐙 ] 作業中に集中力を高めるジャズピアノを演奏💖 Relaxing Jazz Piano Background Music",
   "tags": ["tag", "foo", "bar"]
 }, {
   "id": "nd5cpmQiP-4",
-  "href": "https://www.youtube.com/embed/nd5cpmQiP-4?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "Cozy Hobbit Coffee Shop 🍀 Rainy Day at Dreamy Forest with Fireplace For Relax, Study and Sleep",
   "tags": ["bar"]
 }, {
   "id": "fV1kXBfMl6k",
-  "href": "https://www.youtube.com/embed/fV1kXBfMl6k?modestbranding=1&color=white&iv_load_policy=3&autoplay=1",
   "title": "Ocean - Underwater Ambient Journey - Mysterious Ambient Music For Focus And Concentration",
   "tags": ["tag"]
 }, {
   "id": "l2mW0DxCBY4",
-  "href": "https://www.youtube.com/embed/l2mW0DxCBY4",
   "title": "Cozy Coffee Shop Ambience with Relaxing Jazz Music, Rain Sounds and Crackling Fireplace - 8 Hours",
   "tags": ["foo"]
 }, {
   "id": "1R41JB3hbIc",
-  "href": "https://www.youtube.com/embed/1R41JB3hbIc",
   "title": "Cozy Winter Ambience with a Soothing Fireplace and the Sound of Gentle Rain",
   "tags": ["foo", "bar"]
 }, {
   "id": "vtPpfC1jkiQ",
-  "href": "https://www.youtube.com/embed/vtPpfC1jkiQ",
   "title": "Ethereal Horizon: Soothing Sci-Fi Music for a Tranquil Escape",
   "tags": ["foo", "bar"]
 }, {
   "id": "SnUBb-FAlCY",
-  "href": "https://www.youtube.com/embed/SnUBb-FAlCY",
   "title": "Listen to the rain on the forest path, relax, reduce anxiety, and sleep deeply",
   "tags": ["tag", "bar"]
 }, {
   "id": "KIhGy-587Lk",
-  "href": "https://www.youtube.com/embed/KIhGy-587Lk",
   "title": "Medieval Fantasy Music - Fantasy Music and Ambience",
   "tags": ["tag", "bar"]
 }, {
   "id": "fNnLSCZPXMk",
-  "href": "https://www.youtube.com/embed/fNnLSCZPXMk",
   "title": "Peaceful Instrumental Christmas Music - Relaxing Christmas music 'Snowy Christmas Night'",
   "tags": ["tag", "foo"]
 }, {
   "id": "kkNr8c24Xbo",
-  "href": "https://www.youtube.com/embed/kkNr8c24Xbo",
   "title": "Staying at the Good Witch's Cabin in the Autumn Forest | ASMR Ambience (musicless) Cats & Herbs",
   "tags": ["tag", "foo"]
 }
@@ -173,11 +166,18 @@
       },
       ssThumbnailUrl(id: string) {
         const baseUrl = 'https://img.youtube.com/vi'
-        return `${baseUrl}/${id}/mqdefault.jpg 320w, ${baseUrl}/${id}/hqdefault.jpg 480w,
-        ${baseUrl}/${id}/sddefault.jpg 640w, ${baseUrl}/${id}/maxresdefault.jpg 1280w`
+        return `${baseUrl}/${id}/mqdefault.jpg 320w, ${baseUrl}/${id}/hqdefault.jpg 480w, ${baseUrl}/${id}/sddefault.jpg 640w, ${baseUrl}/${id}/maxresdefault.jpg 1280w`
+      },
+      fbThumbnailUrl(id: string) {
+        const baseUrl = 'https://img.youtube.com/vi'
+        return `${baseUrl}/${id}/mqdefault.jpg`
       },
       onVideoPlay(id: string) {
         this.videoPlayed = id;
+      },
+      videoHref(id: string) {
+        const baseUrl = 'https://www.youtube.com/embed/'
+        return `${baseUrl}${id}?modestbranding=1&color=white&iv_load_policy=3&autoplay=1`
       }
     }
   }
